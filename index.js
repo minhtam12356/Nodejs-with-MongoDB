@@ -2,13 +2,16 @@ require('dotenv').config()
 
 var express = require('express');
 var app = express();
-var UserRouter = require('./route/user.route')
-var LoginRouter = require('./route/login.route')
-var CreateRouter = require('./route/create.route')
-var ProductRouter = require('./route/product.route')
-var CartRouter = require('./route/cart.route')
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/test');
 
-var middleware = require('./middleware/login.middleware')
+var UserRouter = require('./route/user.route');
+var LoginRouter = require('./route/login.route');
+var CreateRouter = require('./route/create.route');
+var ProductRouter = require('./route/product.route');
+var CartRouter = require('./route/cart.route');
+
+var middleware = require('./middleware/login.middleware');
 
 var port = 3000;
 

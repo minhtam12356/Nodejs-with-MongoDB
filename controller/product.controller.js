@@ -1,38 +1,44 @@
-var product = require('../product');
-var session = require('../session');
-var perPage = 4;
+var product = require('../models/product.model');
+var sessionModel = require('../models/session.model');
 
-module.exports.product = function(req, res){
+module.exports.product = async function(req, res){  
     var page = req.query.page || 1;
-    var start = (page - 1) * perPage;
-    var end = page * perPage
-
+    var productModel = require('../models/product.model');
     var products = [];
-    var numbers = [0]
-    var cartIDproducts = session.get('session').find({sessionID : req.signedCookies.sessionCookie}).value();
-    for(cartIDproduct in cartIDproducts.cart){
-        var getProduct = product.get('product').find({id : cartIDproduct}).value()
-        getProduct['quantity']= cartIDproducts.cart[cartIDproduct]
-        products.push(getProduct);
-        numbers.push(cartIDproducts.cart[cartIDproduct]);
+    var numbers = []
+    var cartIDproducts = await sessionModel.findOne({_id : req.signedCookies.sessionCookie});
+    if(cartIDproducts){
+        for(var cartIDproduct in cartIDproducts.Cart){
+
+            //find product name by id in cart
+            var getProduct = await productModel.findOne({_id : cartIDproducts.Cart[cartIDproduct].ProductID});
+            getProduct['quantity']= cartIDproducts.Cart[cartIDproduct].Quantity;
+            products.push(getProduct);
+            numbers.push(cartIDproducts.Cart[cartIDproduct].Quantity);
+            
+        }
+        var number = numbers.reduce((a,b)=>a+b)
+        res.locals.number = number
     }
-    var number = numbers.reduce((a,b)=>a+b)
-    res.locals.number = number
-    
-    res.render('product', {products: product.get('product').value().slice(start, end)
-        , perPage: perPage
-        , page: req.query.page
-        , next: parseInt(req.query.page) + 1
-        , previous: parseInt(req.query.page) - 1
-        , productLength: product.get('product').value().length});
+    var products = await product.find().skip((page - 1)*4).limit(4);
+    var productModel = await product.find();
+    if (products){
+            res.render('product', {
+                products: products
+                , page: req.query.page
+                , next: parseInt(req.query.page) + 1
+                , previous: parseInt(req.query.page) - 1
+                , productLength: productModel.length});
+        }
 }
 
-module.exports.search = function(req, res){ 
+module.exports.search = async function(req, res){ 
     var search = req.query.q;
-    var result = product.get('product').value().filter(function(user){
-        return user.name.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+    var products = await product.find();
+    var result = products.filter(function(product){
+        return product.name.toLowerCase().includes(search.toLowerCase()) === true;
     })
-    res.render('product', {products: result
-                        , value: search
-                        , productLength: product.get('product').value().length})
+        res.render('product', {products: result, value: search})
+    
+    
 }

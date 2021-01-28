@@ -1,14 +1,17 @@
-var db = require('../db');
+var userModel = require('../models/user.model');
 
-module.exports.login = function(req, res){
-    res.render('login', {users: db.get('listUser').value()})
+module.exports.login = async function(req, res){
+        res.render('login')  
 }
 
-module.exports.postLogin = function(req,res){
+module.exports.postLogin = async function(req,res){
     var searchListUser = req.body.username;
-    var resultUser = db.get('listUser').find({username: searchListUser}).value();
-    res.cookie('userCookie', resultUser.id, { signed: true })
-    res.redirect('/home');
+    var resultUser = await userModel.findOne({username: searchListUser});
+    if(resultUser){
+        res.cookie('userCookie', resultUser.id, { signed: true })
+        res.redirect('/home');
+    }
+    
 }
 
 module.exports.signOut = function(req, res){

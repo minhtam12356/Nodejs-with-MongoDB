@@ -1,19 +1,20 @@
-var shortid = require('shortid');
-var db = require('../db');
+var userModel = require('../models/user.model');
 var md5 = require('md5');
 
 module.exports.create = function(req, res){
     res.render('create')
 }
 
-module.exports.postCreate = function(req,res){   
-    req.body.id = shortid.generate();
+module.exports.postCreate = async function(req,res){
     delete req.body.cpass;
 
-    req.body.avatar = (req.file.destination + req.file.filename).split('/').slice(2, 4).join('/');
+    if (req.file){
+        req.body.avatar = (req.file.destination + req.file.filename).split('/').slice(2, 4).join('/');
+    }
+    req.body.avatar = "avatar.png";
 
     req.body.password = md5(req.body.password)
-    db.get('listUser').push(req.body).write();
+    await userModel.create(req.body);
       res.redirect('/');
 }  
   

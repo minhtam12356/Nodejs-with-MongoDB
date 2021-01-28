@@ -83,6 +83,12 @@
     },
     {
       "sessionID": "7CkJOGZJK"
+    },
+    {
+      "sessionID": "CuPS9MQM6",
+      "cart": {
+        "600d3a3f800ba4bd16f891ee": 5
+      }
     }
   ]
 }

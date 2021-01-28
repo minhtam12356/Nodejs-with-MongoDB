@@ -1,41 +1,54 @@
-var db = require('../db');
-var session = require('../session');
-var product = require('../product');
+var userModel = require('../models/user.model');
+var sessionModel = require('../models/session.model');
+var productModel = require('../models/product.model');
 
 
-module.exports.user = function(req,res){
-    res.render('user', {users: db.get('listUser').value()})
+module.exports.user = async function(req,res){
+    var users = await userModel.find()
+    if(users){
+        res.render('user', {users: users})
+    } 
 }
 
-module.exports.search = function(req, res){
+module.exports.search = async function(req, res){
     var searchList = req.query.q;
-    var result = db.get('listUser').value().filter(function(user){
-        return user.name.toLowerCase().indexOf(searchList.toLowerCase()) !== -1;
+    var users = await userModel.find();
+    var result = users.filter(function(user){
+        return user.username.toLowerCase().includes(searchList.toLowerCase()) === true;
     })
-    res.render('user', {users: result, value: searchList});
+    if(result){
+        res.render('user', {users: result, value: searchList});
+    }
+    
 }
 
-module.exports.view = function(req, res){
+module.exports.view = async function(req, res){
     var id = req.params.id;
-    var user = db.get('listUser').find({id: id}).value();
-    res.render('view', {user: user});
+    var user = await userModel.findOne({_id: id});
+    if(user){
+        res.render('view', {user: user});
+    }
+    
 }
 
-module.exports.cart = function(req, res){
+module.exports.cart = async function(req, res){
     var products = [];
-    var numbers = [0];
+    var numbers = [];
 
     //sum
     var sumPQ = [];
     var sumPrice = [];
     var sumQuantity = [];
 
-    var cartIDproducts = session.get('session').find({sessionID : req.signedCookies.sessionCookie}).value();
-    for(cartIDproduct in cartIDproducts.cart){
-        var getProduct = product.get('product').find({id : cartIDproduct}).value()
-        getProduct['quantity']= cartIDproducts.cart[cartIDproduct]
+    var cartIDproducts = await sessionModel.findOne({_id : req.signedCookies.sessionCookie});
+    for(var cartIDproduct in cartIDproducts.Cart){
+
+        //find product name by id in cart
+        var getProduct = await productModel.findOne({_id : cartIDproducts.Cart[cartIDproduct].ProductID});
+        getProduct['quantity']= cartIDproducts.Cart[cartIDproduct].Quantity;
         products.push(getProduct);
-        numbers.push(cartIDproducts.cart[cartIDproduct]);
+        numbers.push(cartIDproducts.Cart[cartIDproduct].Quantity);
+        
         //sum
         sumPrice.push(parseInt(getProduct.price));
         sumQuantity.push(getProduct.quantity);
@@ -48,5 +61,8 @@ module.exports.cart = function(req, res){
     }
     var sum = sumPQ.reduce((a,b)=>a+b);
     var number = numbers.reduce((a,b)=>a+b);
-    res.render('cart', {carts : products, number : number, sum : sum});
+    res.render('cart', {carts : products
+                     , number : number
+                     , sum : sum
+                    });
 }

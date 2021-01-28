@@ -1,18 +1,21 @@
-module.exports.postCreate = function(req, res, next){ 
-    var db = require('../db');
+module.exports.postCreate = async function(req, res, next){ 
+    var userModel = require('../models/user.model');
 
     var listError = [];
     var error = [];
     var errorUser = [];
-
+    
     var name = req.body.name;
     var phone = req.body.phone;
     var username = req.body.username;
     var pass = req.body.password;
     var cpass = req.body.cpass;
-
-    var resultUser = db.get('listUser').find({username: username}).value()
-
+    
+    var resultUser = await userModel.findOne({username: username});
+    if(resultUser){
+        errorUser.push('Username exists');
+    }
+    
     if(!name){
         listError.push('Please enter name');
     }
@@ -28,9 +31,6 @@ module.exports.postCreate = function(req, res, next){
     
     if(pass !== cpass){
         error.push('Password & Confirm Password must be same');
-    }
-    if(resultUser){
-        errorUser.push('Username exists');
     }
     
     if(listError.length){

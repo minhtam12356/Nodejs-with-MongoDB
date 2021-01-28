@@ -1,11 +1,12 @@
-module.exports.postLogin = function(req, res, next){
-    var db = require('../db');
-    if(!req.signedCookies.userCookie){
+module.exports.postLogin = async function(req, res, next){
+    var userModel = require('../models/user.model');
+    var cookieId = req.signedCookies.userCookie;
+    if(!cookieId){
         res.redirect('/login')
         return;
     }
 
-    var userLocals = db.get('listUser').find({id: req.signedCookies.userCookie}).value();
+    var userLocals = await userModel.findOne({_id: cookieId});
     if(!userLocals){
         res.redirect('/login')
         return;
@@ -13,9 +14,10 @@ module.exports.postLogin = function(req, res, next){
     res.locals.userLocals = userLocals;
     next()
 }
-module.exports.product = function(req, res, next){
-    var db = require('../db');
-    var userLocals = db.get('listUser').find({id: req.signedCookies.userCookie}).value();
+module.exports.product = async function(req, res, next){
+    var userModel = require('../models/user.model');
+    var cookieId = req.signedCookies.userCookie;
+    var userLocals = await userModel.findOne({_id: cookieId});
     res.locals.userLocals = userLocals;
     next()
 }

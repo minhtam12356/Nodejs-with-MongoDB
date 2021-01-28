@@ -1,12 +1,12 @@
-module.exports.postLogin = function(req, res, next){   
-    var db = require('../db');
+module.exports.postLogin = async function(req, res, next){   
+    var userModel = require('../models/user.model');
     var md5 = require('md5');
     var listError = []
 
     var searchListUser = req.body.username;
     var searchListPass = req.body.password;
-    var resultUser = db.get('listUser').find({username: searchListUser}).value();
-    if(resultUser === undefined){
+    var resultUser = await userModel.findOne({username: searchListUser});
+    if(!resultUser){
         listError.push('Username invalid');
         res.render('login', {errors: listError, values: req.body})
         return;

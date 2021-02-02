@@ -8,10 +8,15 @@ module.exports.cart = async function(req, res){
         res.redirect('back');
         return;
     }
-    var session = await sessionModel.findOne({_id : sessionID});
+    try {
+    
+    } catch (error) {
+      console.log('error:', error)
+    }
+    var session = await sessionModel.findOne({"_id" : sessionID});
     if(!session){
         await new sessionModel({
-            _id : sessionID,
+            id : sessionID,
             Cart: [
                 {
                     ProductID: productid,
@@ -28,7 +33,13 @@ module.exports.cart = async function(req, res){
         console.log(findSession)
     }    
     else{
-        await sessionModel.updateOne({_id : sessionID}, {$push : {Cart : [{ProductID : productid, Quantity : 1}]}});
+        try {
+            await sessionModel.updateOne({"_id" : sessionID}, {$push : {Cart : [{ProductID : productid, Quantity : 1}]}});
+            
+        } catch (error) {
+            console.log('error:', error)
+        }
+
     }
     
     res.redirect('back');

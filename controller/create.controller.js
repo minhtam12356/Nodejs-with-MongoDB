@@ -11,10 +11,18 @@ module.exports.postCreate = async function(req,res){
     if (req.file){
         req.body.avatar = (req.file.destination + req.file.filename).split('/').slice(2, 4).join('/');
     }
-    req.body.avatar = "avatar.png";
+    else{
+        req.body.avatar = "avatar.png";
+    }
+    
 
     req.body.password = md5(req.body.password)
-    await userModel.create(req.body);
-      res.redirect('/');
+    try {
+        await userModel.create(req.body);
+        res.redirect('/');
+    } catch (error) {
+      console.log('error:', error)
+    }
+    
 }  
   

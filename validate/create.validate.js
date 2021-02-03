@@ -35,7 +35,7 @@ module.exports.postCreate = async function(req, res, next){
             error.push('Password & Confirm Password must be same');
         }
 
-        if(typeof phone !== Number){
+        if(typeof parseInt(phone) !== Number){
             errorType.push('Phone must number');
         }
         

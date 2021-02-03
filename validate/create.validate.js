@@ -7,7 +7,7 @@ module.exports.postCreate = async function(req, res, next){
     var errorType = [];
     
     var name = req.body.name;
-    var phone = req.body.phone;
+    var phone = parseInt(req.body.phone);
     var username = req.body.username;
     var pass = req.body.password;
     var cpass = req.body.cpass;
@@ -35,7 +35,7 @@ module.exports.postCreate = async function(req, res, next){
             error.push('Password & Confirm Password must be same');
         }
 
-        if(typeof parseInt(phone) !== Number){
+        if(typeof phone !== 'number'){
             errorType.push('Phone must number');
         }
         

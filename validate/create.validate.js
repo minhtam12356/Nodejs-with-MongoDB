@@ -4,6 +4,7 @@ module.exports.postCreate = async function(req, res, next){
     var listError = [];
     var error = [];
     var errorUser = [];
+    var errorType = [];
     
     var name = req.body.name;
     var phone = req.body.phone;
@@ -21,17 +22,21 @@ module.exports.postCreate = async function(req, res, next){
             listError.push('Please enter name');
         }
         if(!phone){
-            listError.push('Please enter phone')
+            listError.push('Please enter phone');
         }
         if(!username){
             listError.push('Please enter username');
         }
         if(!pass || !cpass){
-            listError.push('Please enter password & confirm password')
+            listError.push('Please enter password & confirm password');
         }
         
         if(pass !== cpass){
             error.push('Password & Confirm Password must be same');
+        }
+
+        if(typeof phone !== Number){
+            errorType.push('Phone must number');
         }
         
         if(listError.length){
@@ -44,6 +49,10 @@ module.exports.postCreate = async function(req, res, next){
         }
         else if(errorUser.length){
             res.render('create', {errorUser: errorUser, values: req.body})
+            return;
+        }
+        else if(errorType.length){
+            res.render('create', {errorType: errorType, values: req.body})
             return;
         }
     } catch (error) {

@@ -9,6 +9,8 @@ block content
             .alert.alert-danger(style='padding: 0.5rem 0.5rem')= error
     if errorUser
             .alert.alert-danger(style='padding: 0.5rem 0.5rem')= errorUser
+    if errorType
+            .alert.alert-danger(style='padding: 0.5rem 0.5rem')= errorType
     form(action="/create", method="POST", enctype="multipart/form-data" )
         .mb-3
             label(for="name") Họ tên*

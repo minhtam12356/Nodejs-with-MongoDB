@@ -17,7 +17,7 @@ var ApiProduct = require('./api/route/product.route');
 
 var middleware = require('./middleware/login.middleware');
  
-var port = 3001;
+var port = process.env.PORT || 3001;
 
 var userModel = require('./models/user.model');
 

@@ -2,7 +2,7 @@ require('dotenv').config()
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-mongoose.connect(process.env.SESSION_DATABASE_USER, function (err) {
+mongoose.connect(process.env.MONGODB_URI, function (err) {
   if (err) 
     throw err;
   console.log('Successfully connected');

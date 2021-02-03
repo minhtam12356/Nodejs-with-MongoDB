@@ -15,7 +15,7 @@ block content
         each user in users
             tr
                 td
-                    img.me-4(src= '/' + user.avatar, style=('height: 2.5rem; width: 2.5rem; border-radius: 10%'))    
+                    img.me-4(src= user.avatar, style=('height: 2.5rem; width: 2.5rem; border-radius: 10%'))    
                 td.pt-3= user.name
                 td.pt-3= user.phone
                 td

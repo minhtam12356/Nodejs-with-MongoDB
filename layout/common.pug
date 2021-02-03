@@ -22,7 +22,7 @@ html
                 span.me-4(style='display: flex; justify-content: flex-end; position: relative;left: -16px; bottom: -12px;')= number
                 .dropdown.show
                     a#dropdownMenuLink(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                        img.me-4(src= '/' + userLocals.avatar, aria-labelledby='dropdownMenuLink', style=('height: 2.5rem; width: 2.5rem; border-radius: 100%'))
+                        img.me-4(src= userLocals.avatar, aria-labelledby='dropdownMenuLink', style=('height: 2.5rem; width: 2.5rem; border-radius: 100%'))
                     ul.dropdown-menu(aria-labelledby='dropdownMenuLink', style='left: -99px; min-width: 0')
                         li
                             a.dropdown-item(href='/user/' + userLocals.id) Thông tin cá nhân

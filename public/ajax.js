@@ -17,7 +17,7 @@ var preEndPage = document.getElementsByClassName('page-link')[6];       //5
 var endPage = document.getElementsByClassName('page-link')[7];          //6
 
 //url Api
-var urlApi = 'http://localhost:3001/api/product';
+var urlApi = '/api/product';
 
 axios.get(urlApi)
 .then(item => {

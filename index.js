@@ -1,6 +1,7 @@
 require('dotenv').config()
 var express = require('express');
 var app = express();
+var morgam = require('morgan');
 var mongoose = require('mongoose');
 var cors = require('cors');
 mongoose.connect(process.env.MONGODB_URI, function (err) {
@@ -26,6 +27,7 @@ var cookieParser = require('cookie-parser');
 const sessionMiddleware = require('./middleware/session.middleware');
 app.use(cookieParser('secret'))
 
+app.use(morgan('combined'))
 app.use(cors());
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded

@@ -1,7 +1,7 @@
 require('dotenv').config()
 var express = require('express');
 var app = express();
-var morgam = require('morgan');
+var morgan = require('morgan');
 var mongoose = require('mongoose');
 var cors = require('cors');
 mongoose.connect(process.env.MONGODB_URI, function (err) {

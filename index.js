@@ -29,7 +29,6 @@ app.use(cookieParser('secret'))
 app.use(cors());
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use('/api/product', ApiProduct);
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));

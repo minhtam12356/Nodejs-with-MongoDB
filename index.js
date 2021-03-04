@@ -10,8 +10,8 @@ mongoose.connect(process.env.MONGODB_URI, function (err) {
   console.log('Successfully connected');
 })
 
-var logger = require('./logger').createLogger(); // logs to STDOUT
-var logger = require('./logger').createLogger('development.log'); // logs to a file
+var logger = require('logger').createLogger(); // logs to STDOUT
+var logger = require('logger').createLogger('development.log'); // logs to a file
 
 var UserRouter = require('./route/user.route');
 var LoginRouter = require('./route/login.route');

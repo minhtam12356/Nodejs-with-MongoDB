@@ -1,6 +1,3 @@
-var start = 0;
-var end = 4;
-var products=[];
 var list = document.getElementsByClassName('list-product')[0];
 
 //button previous, button next
@@ -17,62 +14,83 @@ var preEndPage = document.getElementsByClassName('page-link')[6];       //5
 var endPage = document.getElementsByClassName('page-link')[7];          //6
 
 //url Api
-var urlApi = '/api/product';
+var urlApi = '/api/product/pagination?page=';
+var number = 1;
+if(!localStorage.getItem('number-page')){
+    localStorage.setItem('number-page', number)
+}  
 
-axios.get(urlApi)
-.then(item => {
+//render
+function render(number){
+    var products = []; 
+    axios.get(urlApi + number)
+        .then(item => {
+            products.push(...item.data)
+            presentPage.textContent = number;
+            var string = products.map(function(item){
+                return `
+                <div class="card mt-4" style="width: 16rem">
+                    <img class="card-img-top position-relative" src="${item.image}" style="width: 16rem; height: 12rem; left: -1px" />
+                    <div class="card-body">
+                        <h5 class="card-title">${item.name}</h5>
+                        <p class="card-text">${item.description}</p>
+                        <a class="btn btn-primary" href="/cart/add/${item._id}">Thêm vào giỏ hàng</a>
+                    </div>
+                </div>`
+            })
+            list.innerHTML = string.join('');
+        })
     
-    products.push(...item.data)
-    var product = products.slice(start, end)
-    
-    presentPage.textContent = 1;
-    endPage.textContent = Math.round(products.length/4);
-    preEndPage.textContent = Math.round(products.length/4) - 1;
-    preLink.setAttribute('class', 'page-item disabled');
-    nextButton.addEventListener('click', function(){
-        start+=4;
-        end+=4;
-        if(end >= products.length){
-            var product = products.slice(start, end);
-            nextLink.setAttribute('class', 'page-item disabled');
-            preLink.setAttribute('class', 'page-item');
-            presentPage.textContent = Math.round(end/4);
-            render(product);
-        }
-        else{
-            var product = products.slice(start, end);
-            nextLink.setAttribute('class', 'page-item');
-            preLink.setAttribute('class', 'page-item');
-            presentPage.textContent = Math.round(end/4);
-            render(product);
-        }
-        
-    })
+}
+render(localStorage.getItem('number-page'))
+preLink.setAttribute('class', 'page-item disabled');
+//Next Button
+nextButton.addEventListener('click', function(){
+    number = parseInt(localStorage.getItem('number-page')) + 1;
+    localStorage.setItem('number-page', number) 
+    render(number)
+    presentPage.textContent = number;
+    axios.get(urlApi + (number + 1))
+        .then(item => {
+            if(typeof item.data == 'string'){
+                nextLink.setAttribute('class', 'page-item disabled');
+                preLink.setAttribute('class', 'page-item');
+            }
+            else{
+                nextLink.setAttribute('class', 'page-item');
+                preLink.setAttribute('class', 'page-item');
+            }
+            
+        })
+})
 
-    preButton.addEventListener('click', function(){
-        start-=4;
-        end-=4;
-        if(start < 4 ){
-            var product = products.slice(start, end);
-            preLink.setAttribute('class', 'page-item disabled');
-            nextLink.setAttribute('class', 'page-item');
-            presentPage.textContent = Math.round(end/4);
-            render(product);
-        }
-        else{
-            var product = products.slice(start, end);
-            preLink.setAttribute('class', 'page-item');
-            nextLink.setAttribute('class', 'page-item');
-            presentPage.textContent = Math.round(end/4);
-            render(product);
-        }
-    })
-    function addlinkPage(page){
+//Previous Button
+preButton.addEventListener('click', function(){
+    number = parseInt(localStorage.getItem('number-page')) - 1;
+    localStorage.setItem('number-page', number) 
+    render(number)
+    presentPage.textContent = number;
+    axios.get(urlApi + (number - 1))
+        .then(item => {
+            if(typeof item.data == 'string'){
+                preLink.setAttribute('class', 'page-item disabled');
+                nextLink.setAttribute('class', 'page-item');
+            }
+            else{
+                preLink.setAttribute('class', 'page-item');
+                nextLink.setAttribute('class', 'page-item');
+            }
+            
+        })
+})      
+    
+//Page 1
+
+    function addlinkPage(page, number){
         page.addEventListener('click', function(){
-            end = page.textContent * 4;
-            start = end - 4;
-            var product = products.slice(start, end);
-            presentPage.textContent = Math.round(end/4);
+            render(number)
+            presentPage.textContent = parseInt(localStorage.getItem('number-page'));
+            localStorage.setItem('number-page', number) 
             if(end >= products.length){
                 nextLink.setAttribute('class', 'page-item disabled');
             }           
@@ -83,28 +101,11 @@ axios.get(urlApi)
             else{
                 preLink.setAttribute('class', 'page-item');
             }
-            render(product);
         })
     }
-    addlinkPage(startPage);
-    addlinkPage(nextStartPage);
-    addlinkPage(preEndPage);
-    addlinkPage(endPage );
+    addlinkPage(startPage, 1);
+    addlinkPage(nextStartPage, 2);
+    addlinkPage(preEndPage, 5);
+    addlinkPage(endPage, 6);
       
-    function render(product){
-        var string = product.map(function(item){
-            return `
-            <div class="card mt-4" style="width: 16rem">
-                <img class="card-img-top position-relative" src="${item.image}" style="width: 16rem; height: 12rem; left: -1px" />
-                <div class="card-body">
-                    <h5 class="card-title">${item.name}</h5>
-                    <p class="card-text">${item.description}</p>
-                    <a class="btn btn-primary" href="/cart/add/${item._id}">Thêm vào giỏ hàng</a>
-                </div>
-            </div>`
-        })
-        list.innerHTML = string.join('');
-    }
-    render(product)
-
-});
+// });

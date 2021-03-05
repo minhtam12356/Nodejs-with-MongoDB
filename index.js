@@ -1,9 +1,11 @@
 require('dotenv').config()
+
 var express = require('express');
 var app = express();
 var morgan = require('morgan');
-var mongoose = require('mongoose');
 var cors = require('cors');
+
+var mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI, function (err) {
   if (err) 
     throw err;
@@ -18,9 +20,13 @@ var LoginRouter = require('./route/login.route');
 var CreateRouter = require('./route/create.route');
 var ProductRouter = require('./route/product.route');
 var CartRouter = require('./route/cart.route');
+
+//api
 var ApiProduct = require('./api/route/product.route');
+var ApiUser = require('./api/route/user.route');
 
 var middleware = require('./middleware/login.middleware');
+var auth = require('./middleware/auth.middleware');
  
 var port = process.env.PORT || 3001;
 
@@ -32,8 +38,10 @@ app.use(cookieParser('secret'))
 
 app.use(morgan('combined'))
 app.use(cors());
+
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
@@ -54,7 +62,10 @@ app.use('/create', CreateRouter);
 app.use('/user', sessionMiddleware, middleware.postLogin, UserRouter);
 app.use('/login', LoginRouter);
 app.use('/cart', sessionMiddleware, CartRouter);
+
+// api
 app.use('/api/product', ApiProduct);
+app.use('/api/user', auth.auth, ApiUser);
 
 app.listen(port, function(){
     console.log(`Server listening on port ${port}`)

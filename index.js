@@ -13,10 +13,12 @@ app.use(express.static('public'));
 const cors = require('cors');
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-
 //===SOCKET.IO===
 io.on("connection", function(socket){
   console.log('CO KET NOI', socket.id);
+  socket.on("disconnect", function(){
+    console.log(socket.id, 'NGAT KET NOI');
+  })
 })
 
 const cookieParser = require('cookie-parser');
@@ -80,7 +82,7 @@ app.use('/api/product', ApiProduct);
 app.use('/api/user', auth.auth, ApiUser);
 
 //===LISTEN PORT===
-app.listen(port, function(){
+server.listen(port, function(){
     console.log(`Server listening on port ${port}`)
 })
 

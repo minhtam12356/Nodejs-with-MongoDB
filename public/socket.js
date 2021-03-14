@@ -1,0 +1,1 @@
+const server = io("http://localhost:3001")

@@ -1,3 +1,17 @@
 h1{
     color: red;
 }
+body{
+    color: aliceblue !important;
+    background-color: rgb(40, 79, 116) !important;
+}
+.navbar{
+    color: #dd5a5a !important;
+}
+.me-4{
+    text-decoration: none;
+    font-weight: bold;
+}
+*{
+    transition: 0.2s !important;
+}

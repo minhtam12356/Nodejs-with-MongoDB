@@ -1,0 +1,10 @@
+extends ../layout/common
+
+block content
+    .card.mt-4(style='width: 16rem')
+        img.card-img-top.position-relative(src= product.image, style='width: 16rem; height: 12rem; left: -1px')
+        .card-body
+            h5.card-title= product.name
+            p.card-text= product.description
+            span Price: 
+                span.card-text= product.price

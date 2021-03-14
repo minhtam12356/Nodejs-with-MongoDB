@@ -10,8 +10,8 @@ module.exports.postLogin = async function(req,res){
     try {
         var resultUser = await userModel.findOne({username: searchListUser});
         var token = jwt.sign({_id : resultUser.id}, 'tamnguyen')
-        res.cookie('userCookie', resultUser.id, { signed: true })
-        res.cookie('userToken', token)
+        res.cookie('userCookie', resultUser.id, { expires: new Date(Date.now() + 9000000), signed: true })
+        res.cookie('userToken', token, { expires: new Date(Date.now() + 9000000)}) 
 
         res.redirect('/home');
     

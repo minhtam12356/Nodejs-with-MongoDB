@@ -4,9 +4,9 @@ block content
     //- product
     h1 Sản phẩm
     .d-flex.justify-content-end
-        input#input(type="text", name='q', placeholder="Nhập tên sản phẩm...", value= value)
-        button.btn.btn-primary Tìm sản phẩm
-    .list-product.d-flex(style='flex-wrap: wrap; justify-content: space-around')
+        input#input-name-product(type="text", placeholder="Nhập tên sản phẩm...")
+        button#search-product.btn.btn-primary Tìm sản phẩm
+    .list-product.d-flex(style='flex-wrap: wrap')
         
             
     //- pagination
@@ -15,19 +15,19 @@ block content
             li.page-item
                 button.page-link Trang trước
             li.page-item
-                button.page-link 1
+                button.page-link 
             li.page-item
-                button.page-link 2
+                button.page-link 
             li.page-item.disabled
                 .page-link ...
             li.page-item.disabled
-                button.page-link(style="text-decoration: underline") 1
+                button.page-link(style="text-decoration: underline") 
             li.page-item.disabled
                 .page-link ...
             li.page-item
-                button.page-link 5
+                button.page-link 
             li.page-item
-                button.page-link 6
+                button.page-link 
             li.page-item
                 button.page-link Trang kế                    
 

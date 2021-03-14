@@ -1,19 +1,13 @@
 var express = require('express');
-var product = require('../../models/product.model');
 var route = express.Router();
 var apiController = require('../controller/product.controller');
 
-route.get('/:id', apiController.getProduct);
-route.post('/', async function(req, res){
-    try {
-        console.log(req.body);
-        
-        await product.create(req.body)
-    res.json('thanh cong')
-    } catch (error) {
-        console.log(error);
-    }
-    
+route.get('/', apiController.getProduct);
 
-})
+route.get('/search', apiController.searchProduct);
+
+route.get('/:id', apiController.getProductById);
+
+route.post('/add', apiController.postProduct);
+
 module.exports = route;

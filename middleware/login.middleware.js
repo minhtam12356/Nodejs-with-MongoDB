@@ -18,15 +18,3 @@ module.exports.postLogin = async function(req, res, next){
     }
     
 }
-module.exports.product = async function(req, res, next){
-    var userModel = require('../models/user.model');
-    var cookieId = req.signedCookies.userCookie;
-     try {
-        var userLocals = await userModel.findOne({"_id": cookieId});
-        res.locals.userLocals = userLocals;
-        next()
-    } catch (error) {
-        console.log('error:', error)
-    }
-    
-}
